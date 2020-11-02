@@ -1,0 +1,21 @@
+# compiled output
+build/
+dist/
+out/
+bin/
+/tmp
+
+#build files
+.gradle/
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# System Files
+.DS_Store
+Thumbs.db
