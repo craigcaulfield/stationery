@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Perform the inventory calculations.
  *
@@ -33,6 +35,28 @@ public class Calculator {
 
 
     /**
+     * Parse the incoming orders and calculate the minimum bundles.
+     *
+     * @param orders a string representing an order in the format <productcode><space><quantity>
+     */
+    public void process(List<String> orders) {
+
+        Map<String, String> parsedOrders = orders
+                .stream()
+                .map(order -> order.split("\\s+"))
+                .collect(toMap(order -> order[0], order -> order[1]));
+
+        for (Map.Entry<String,String> entry : parsedOrders.entrySet()) {
+
+            System.out.println(entry.getValue() + " " + entry.getKey());
+            Map<Integer, Long> bundleBreakdown = breakdownBundle(entry.getKey(), Integer.parseInt(entry.getValue()));
+            for (Map.Entry<Integer, Long> breakdown : bundleBreakdown.entrySet()) {
+                System.out.println("\t" + breakdown.getValue() + " x " + breakdown.getKey());
+            }
+        }
+    }
+
+    /**
      * Break down a product code into the minimum bundles
      *
      * @param productCode the pencil product code
@@ -41,7 +65,6 @@ public class Calculator {
      */
     public Map<Integer, Long> breakdownBundle(String productCode, int quantity) {
 
-        Map<Integer, Integer> breakdown = new HashMap<>();
         int min = 0;
 
         ProductBundles bundle = ProductBundles.findByProductCode(productCode);

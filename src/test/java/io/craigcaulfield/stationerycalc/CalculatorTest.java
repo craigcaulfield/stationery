@@ -3,7 +3,10 @@ package io.craigcaulfield.stationerycalc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,5 +67,15 @@ public class CalculatorTest {
         );
 
         assertEquals(expectedValue, classUnderTest.breakdownBundle("BP19", 13));
+    }
+
+    @Test
+    public void testOrderProcessing() {
+
+        List<String> orders = Stream.of("HB24 10", "PPM3 15", "BP19 13")
+                .collect(Collectors.toList());
+
+        classUnderTest.process(orders);
+
     }
 }

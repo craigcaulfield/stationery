@@ -19,5 +19,8 @@ public class App {
             if (orderLine == null) break;
             orders.add(orderLine);
         }
+
+        Calculator calculator = new Calculator();
+        calculator.process(orders);
     }
 }
