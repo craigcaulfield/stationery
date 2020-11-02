@@ -3,6 +3,8 @@ package io.craigcaulfield.stationerycalc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CalculatorTest {
@@ -33,5 +35,34 @@ public class CalculatorTest {
         int[] bp19 = {3,5,9};
         int minimum = classUnderTest.minimumBundles(bp19, 13, new int[13]);
         assertEquals(3, minimum);
+    }
+
+    @Test
+    public void testHBBreakdown() {
+        Map<Integer, Long> expectedValue = Map.of(
+                10, Long.valueOf(1)
+        );
+
+        assertEquals(expectedValue, classUnderTest.breakdownBundle("HB24", 10));
+    }
+
+    @Test
+    public void testPPM3Breakdown() {
+        Map<Integer, Long> expectedValue = Map.of(
+                6, Long.valueOf(1),
+                9, Long.valueOf(1)
+        );
+
+        assertEquals(expectedValue, classUnderTest.breakdownBundle("PPM3", 15));
+    }
+
+    @Test
+    public void testBP19Breakdown() {
+        Map<Integer, Long> expectedValue = Map.of(
+                3, Long.valueOf(1),
+                5, Long.valueOf(2)
+        );
+
+        assertEquals(expectedValue, classUnderTest.breakdownBundle("BP19", 13));
     }
 }

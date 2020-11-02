@@ -2,6 +2,7 @@ package io.craigcaulfield.stationerycalc;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Perform the inventory calculations.
@@ -11,6 +12,8 @@ import java.util.*;
 public class Calculator {
 
     private List<Pencil> inventory = new ArrayList<>();
+
+    private List<Integer> denomination = new LinkedList<>();
 
     private void loadInventory() {
 
@@ -36,14 +39,24 @@ public class Calculator {
      * @param quantity the required quantity
      * @return a Map of the bundles in this format: (bundle size, number)
      */
-    public Map<Integer, Integer> breakdownBundle(String productCode, int quantity) {
+    public Map<Integer, Long> breakdownBundle(String productCode, int quantity) {
 
         Map<Integer, Integer> breakdown = new HashMap<>();
+        int min = 0;
 
+        ProductBundles bundle = ProductBundles.findByProductCode(productCode);
+        if (bundle != null) {
+            min = minimumBundles(bundle.getBundle(), quantity, new int[quantity]);
+        }
 
+        // Get the raw bundle/count list
+        List<Integer> denominations = denomination.stream().skip(denomination.size() - min).collect(Collectors.toList());
 
+        // Summarise the bundles/counts
+        Map<Integer, Long> counts =
+                denominations.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
-        return breakdown;
+        return counts;
     }
 
 
@@ -72,6 +85,7 @@ public class Calculator {
         for (int bundle : bundles) {
             int res = minimumBundles(bundles, remainder - bundle, count);
             if (res >= 0 && res < minimum) {
+                denomination.add(bundle);
                 minimum = 1 + res;
             }
         }
